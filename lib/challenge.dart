@@ -1,93 +1,124 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(
-    MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text("SEASONS"),
-          backgroundColor: const Color.fromARGB(255, 141, 188, 226),
+List<String> imagesFrance = [
+  "assets/Spring.png",
+  "assets/Summer.png",
+  "assets/Autume.png",
+  "assets/Winter.png",
+];
+
+List<String> imagesCambodia = [
+  "assets/Winter.png",
+  "assets/Summer.png",
+  "assets/Autume.png",
+  "assets/Spring.png",
+];
+
+void main() => runApp(
+  MaterialApp(debugShowCheckedModeBanner: false, home: SeasonScreen()),
+);
+
+class SeasonScreen extends StatelessWidget {
+  const SeasonScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(30, 15, 30, 20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.grey, width: 2),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                "SEASONS",
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w900,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+              const SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SeasonCard(countryName: "FRANCE", imagesPaths: imagesFrance),
+                  const SizedBox(width: 20),
+                  SeasonCard(
+                    countryName: "CAMBODIA",
+                    imagesPaths: imagesCambodia,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-        body: const SeasonCard(),
       ),
-    ),
-  );
+    );
+  }
 }
 
 class SeasonCard extends StatefulWidget {
-  const SeasonCard({super.key});
+  final String countryName;
+  final List<String> imagesPaths;
+  const SeasonCard({
+    required this.countryName,
+    required this.imagesPaths,
+    super.key,
+  });
 
   @override
   State<SeasonCard> createState() => _SeasonCardState();
 }
 
 class _SeasonCardState extends State<SeasonCard> {
-  int SeasonIndex = 0;
+  int seasonIndex = 0;
 
-  void nextCambodiaSeason() {
+  void onTap() {
     setState(() {
-      SeasonIndex = (SeasonIndex + 1) % 4;
+      seasonIndex = (seasonIndex == widget.imagesPaths.length - 1)
+          ? 0
+          : seasonIndex + 1;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey, width: 1),
+      ),
+      child: Column(
         children: [
-          Container(
-            width: 150,
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black12),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Image.asset(
-                  "assets/winter.png",
-                  height: 150,
-                  fit: BoxFit.cover,
+          GestureDetector(
+            onTap: onTap,
+            child: Container(
+              decoration: const BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(width: 1, color: Colors.grey),
                 ),
-                const SizedBox(height: 10),
-                const Text(
-                  "FRANCE",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
+              ),
+              child: Image.asset(
+                widget.imagesPaths[seasonIndex],
+                width: 150,
+                height: 270,
+                fit: BoxFit.fill,
+              ),
             ),
           ),
-          const SizedBox(width: 20),
-          GestureDetector(
-            onTap: nextCambodiaSeason,
-            child: Container(
-              width: 150,
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black12),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.asset(
-                    [
-                      "assets/Spring.png",
-                      "assets/Summer.png",
-                      "assets/Autume.png",
-                      "assets/Winter.png",
-                    ][SeasonIndex],
-                    height: 150,
-                    fit: BoxFit.cover,
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    "CAMBODIA",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ],
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+            child: Text(
+              widget.countryName,
+              style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
               ),
             ),
           ),
